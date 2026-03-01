@@ -42,10 +42,17 @@ def index():
 	cursor = conn.cursor() 
 	
 	if busca: 
-		cursor.execute("SELECT *FROM produtos WHERE nome like ? ORDER BY categoria",('%'+busca+'%',))
+		cursor.execute("""
+			SELECT * FROM produtos
+			WHERE LOWER(nome) LIKE LOWER(?) 
+			OR LOWER(categoria) LIKE LOWER(?)
+			ORDER BY categoria 
+		""",('%'+busca+'%','%'+busca+'%')) 
+
 	
 	else:
-		cursor.execute("SELECT *FROM produtos ORDER BY categoria")
+		cursor.execute("SELECT * FROM produtos ORDER BY categoria") 
+	
 	
 	produtos = cursor.fetchall() 
 	conn.close() 
@@ -135,6 +142,78 @@ def grafico():
     dados = cursor.fetchall()
     conn.close()
     return render_template("grafico.html", dados=dados)
+
+def iniciar_banco():
+	conn = conectar()
+	cursor = conn.cursor() 
+	cursor.execute(""" 
+		CREATE TABLE IF NOT EXISTS produtos (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			nome TEXT,
+			categoria TEXT,
+			quantidade INTEGER,
+			imagem TEXT,
+			retiradas INTEGER DEFAULT 0
+		)
+		""")
+	
+	conn.commit() 
+	conn.close() 
+
+
+# ==== EDITAR PRODUTOS ====
+
+@app.route("/editar/<int:id>",methods=["GET","POST"])
+def editar(id):
+	conn = conectar() 
+	cursor = conn.cursor() 
+	
+	if request.method == "POST":
+		nome = request.form["nome"]
+		categoria = request.form["categoria"]
+		quantidade = request.form["quantidade"]
+		
+		cursor.execute("""
+			UPDATE produtos 
+			SET nome=?, categoria=?,quantidade=?
+			WHERE id=?
+		
+		""",(nome,categoria,quantidade,id))
+		
+		conn.commit()
+		conn.close()
+		return redirect("/admin") 
+	
+	cursor.execute("SELECT * FROM produtos WHERE id=?",(id,)) 
+	produto = cursor.fetchone()
+	conn.close()
+	
+	return render_template("editar.html",produto=produto)
+
+
+@app.route("/dashboard") 
+
+def dashboard():
+	conn = conectar() 
+	cursor = conn.cursor() 
+	
+	cursor.execute("SELECT COUNT(*) FROM produtos") 
+	total_produtos = cursor.fetchone()[0]
+	
+	cursor.execute("SELECT SUM(quantidade) FROM produtos")
+	total_itens = cursor.fetchone()[0] or 0 
+	
+	cursor.execute("SELECT SUM(retiradas) FROM produtos")
+	
+	total_retiradas = cursor.fetchone()[0] or 0 
+	
+	conn.close() 
+	
+	return render_template("dashboard.html",total_produtos=total_produtos,total_itens=total_itens,total_retiradas=total_retiradas)
+
+
+iniciar_banco()
+
 
 if __name__ == "__main__":
     criar_tabela()

@@ -9,11 +9,7 @@
 
 <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
-}
-</script>
+
 
 <a href="/dashboard" class="btn btn-warning btn-sm">Dashboard</a>
 <title>Controle de Estoque</title>
@@ -49,6 +45,3 @@ if ('serviceWorker' in navigator) {
 </script>
 </body>
 </html>
-
-
-

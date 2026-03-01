@@ -1,3 +1,3 @@
 self.addEventListener('install', e => {
-  console.log("Service Worker instalado");
+  console.log('App de estoque pronto para instalar');
 });

@@ -38,13 +38,14 @@ if ('serviceWorker' in navigator) {
 <div class="container mt-4 mb-5">
 {% block conteudo %}{% endblock %}
 </div>
-<link rel="manifest" href="/manifest.json">
+
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
+    navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
 }
 </script>
 </body>
 </html>
+
 

@@ -1,0 +1,45 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-4">
+
+<div class="d-flex justify-content-between">
+<h2>Painel dos Produtos</h2>
+<a href="/" class="btn btn-secondary">Voltar ao início</a>
+</div>
+
+<hr>
+
+<a href="/adicionar" class="btn btn-success mb-3">Adicionar Produto</a>
+
+{% if produtos|length == 0 %}
+
+<div class="alert alert-warning">
+Nenhum produto cadastrado.
+</div>
+
+{% else %}
+
+<table class="table table-bordered">
+<tr>
+<th>Produto</th>
+<th>Categoria</th>
+<th>Qtd</th>
+<th>Ações</th>
+</tr>
+
+{% for p in produtos %}
+<tr>
+<td>{{ p[1] }}</td>
+<td>{{ p[2] }}</td>
+<td>{{ p[3] }}</td>
+<td>
+<a href="/remover/{{p[0]}}" class="btn btn-danger btn-sm">Remover</a>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+</div>

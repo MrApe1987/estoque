@@ -1,0 +1,25 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="container mt-4">
+<h2>Produtos mais retirados</h2>
+
+<canvas id="grafico"></canvas>
+
+<a href="/" class="btn btn-secondary mt-3">Voltar</a>
+</div>
+
+<script>
+let nomes = {{ dados|map(attribute=0)|list|tojson }};
+let valores = {{ dados|map(attribute=1)|list|tojson }};
+
+new Chart(document.getElementById("grafico"), {
+    type: 'bar',
+    data: {
+        labels: nomes,
+        datasets: [{
+            label: 'Retiradas',
+            data: valores
+        }]
+    }
+});
+</script>

@@ -42,10 +42,13 @@ if ('serviceWorker' in navigator) {
 
 <script>
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}")
+    navigator.serviceWorker.register("/static/sw.js")
+        .then(() => console.log("Service Worker registrado"))
+        .catch(err => console.log("Erro SW:", err));
 }
 </script>
 </body>
 </html>
+
 
 
